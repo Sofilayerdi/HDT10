@@ -20,7 +20,6 @@ class Grafo:
         self.indice_ciudad = {}
         self.matriz = []
         
-        # Construir lista de ciudades únicas
         for ruta in rutas:
             if ruta.ciudad1 not in self.indice_ciudad:
                 self.indice_ciudad[ruta.ciudad1] = len(self.ciudades)
@@ -36,11 +35,9 @@ class Grafo:
         infinito = sys.maxsize // 2
         self.matriz = [[infinito] * n for _ in range(n)]
         
-        # Inicializar diagonal con 0
         for i in range(n):
             self.matriz[i][i] = 0
         
-        # Llenar matriz con tiempos normales
         for ruta in self.rutas_originales:
             i = self.indice_ciudad[ruta.ciudad1]
             j = self.indice_ciudad[ruta.ciudad2]
@@ -77,7 +74,6 @@ class AlgortimoFloyd:
         self.distancias = [fila.copy() for fila in matriz]
         self.siguiente = [[0] * n for _ in range(n)]
         
-        # Inicializar matriz siguiente
         for i in range(n):
             for j in range(n):
                 if i != j and matriz[i][j] < self.infinito:
@@ -138,7 +134,7 @@ class AnalizadorArchivo:
 class main:
     def __init__(self):
         self.grafo = None
-        self.floyd = AlgoritmoFloyd()
+        self.floyd = AlgortimoFloyd()
         self.archivo_datos = "logistica.txt"
     
     def ejecutar(self):
