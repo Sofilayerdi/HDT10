@@ -288,3 +288,111 @@ class main:
         
         except ValueError:
             print("\nEntrada no válida. Debe ingresar un número.")
+        
+        def centro_grafo(self):
+            ciudades = self.grafo.obtener_ciudades()
+            n = len(ciudades)
+        
+            if n == 0:
+                print("\nNo hay ciudades en el grafo.")
+            return
+        
+        self.floyd.calcular(self.grafo.obtener_matriz())
+        
+        centro_idx = -1
+        minima_excentricidad = sys.maxsize
+        
+        print("\nCalculando centro del grafo...")
+        print("\nExcentricidad para cada ciudad:")
+        print("----------------------------------------")
+        
+        for i in range(n):
+            maxima_distancia = 0
+            
+            for j in range(n):
+                if i != j:
+                    distancia = self.floyd.obtener_distancia(i, j)
+                    if distancia < sys.maxsize // 2 and distancia > maxima_distancia:
+                        maxima_distancia = distancia
+            
+            print(f"{ciudades[i]}: {maxima_distancia}")
+            
+            if maxima_distancia < minima_excentricidad:
+                minima_excentricidad = maxima_distancia
+                centro_idx = i
+        
+        if centro_idx != -1:
+            print("----------------------------------------")
+            print(f"\nCentro del grafo: {ciudades[centro_idx]}")
+            print(f"Excentricidad (distancia máxima a cualquier otra ciudad): {minima_excentricidad}")
+            
+            print("\nDistancias desde el centro a otras ciudades:")
+            print("------------------------------------------")
+            for j in range(n):
+                if centro_idx != j:
+                    distancia = self.floyd.obtener_distancia(centro_idx, j)
+                    if distancia < sys.maxsize // 2:
+                        print(f"{ciudades[centro_idx]} -> {ciudades[j]}: {distancia} horas")
+                    else:
+                        print(f"{ciudades[centro_idx]} -> {ciudades[j]}: Sin ruta disponible")
+        else:
+            print("\nNo se pudo determinar el centro del grafo.")
+    
+    def modificar_grafo(self):
+        rutas = self.grafo.obtener_rutas_originales()
+        print("\nRutas disponibles:")
+        for idx, ruta in enumerate(rutas):
+            print(f"{idx}: {ruta.ciudad1} - {ruta.ciudad2} (Normal: {ruta.tiempo_normal}, Lluvia: {ruta.tiempo_lluvia}, Nieve: {ruta.tiempo_nieve}, Tormenta: {ruta.tiempo_tormenta})")
+        
+        try:
+            opcion = int(input("\nElija una opción:\n1. Modificar ruta existente\n2. Agregar nueva ruta\n3. Bloquear ruta\n4. Volver\n\nOpción: "))
+            
+            if opcion == 1:
+                self.modificar_ruta_existente()
+            elif opcion == 2:
+                self.agregar_nueva_ruta()
+            elif opcion == 3:
+                self.bloquear_ruta()
+            elif opcion == 4:
+                return
+            else:
+                print("\nOpción no válida.")
+            
+            # Recalcular Floyd después de modificar
+            self.floyd.calcular(self.grafo.obtener_matriz())
+        
+        except ValueError:
+            print("\nEntrada no válida. Debe ingresar un número.")
+    
+    def modificar_ruta_existente(self):
+        rutas = self.grafo.obtener_rutas_originales()
+        idx_ruta = int(input("\nIngrese el índice de la ruta a modificar: "))
+        
+        if idx_ruta < 0 or idx_ruta >= len(rutas):
+            print("\nÍndice de ruta no válido.")
+            return
+        
+        ruta = rutas[idx_ruta]
+        print(f"\nModificando ruta: {ruta.ciudad1} - {ruta.ciudad2}")
+        print("Seleccione condición climática:")
+        print(f"1. Normal ({ruta.tiempo_normal})")
+        print(f"2. Lluvia ({ruta.tiempo_lluvia})")
+        print(f"3. Nieve ({ruta.tiempo_nieve})")
+        print(f"4. Tormenta ({ruta.tiempo_tormenta})")
+        
+        opcion = int(input("Opción: "))
+        
+        if opcion == 1:
+            nuevo_tiempo = ruta.tiempo_normal
+        elif opcion == 2:
+            nuevo_tiempo = ruta.tiempo_lluvia
+        elif opcion == 3:
+            nuevo_tiempo = ruta.tiempo_nieve
+        elif opcion == 4:
+            nuevo_tiempo = ruta.tiempo_tormenta
+        else:
+            print("\nOpción no válida.")
+            return
+        
+        self.grafo.actualizar_ruta(ruta.ciudad1, ruta.ciudad2, nuevo_tiempo)
+        print(f"\nRuta actualizada: {ruta.ciudad1} - {ruta.ciudad2} con nuevo tiempo: {nuevo_tiempo}")
