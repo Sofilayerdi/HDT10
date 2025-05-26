@@ -135,4 +135,160 @@ class AnalizadorArchivo:
                                 tiempo_nieve, tiempo_tormenta))
         return rutas
 
+class main:
+    def __init__(self):
+        self.grafo = None
+        self.floyd = AlgoritmoFloyd()
+        self.archivo_datos = "logistica.txt"
+    
+    def ejecutar(self):
+        try:
+            rutas = AnalizadorArchivo.analizar(self.archivo_datos)
+            self.grafo = Grafo(rutas)
+            self.floyd.calcular(self.grafo.obtener_matriz())
+            
+            salir = False
+            while not salir:
+                self.mostrar_menu()
+                opcion = self.leer_opcion()
+                
+                if opcion == 1:
+                    self.ruta_mas_corta()
+                elif opcion == 2:
+                    self.centro_grafo()
+                elif opcion == 3:
+                    self.modificar_grafo()
+                elif opcion == 4:
+                    print("\n¡Gracias por usar el programa de optimización de rutas!")
+                    salir = True
+                else:
+                    print("\nOpción no válida. Intente nuevamente.")
+        
+        except FileNotFoundError:
+            print(f"Error: No se encontró el archivo {self.archivo_datos}")
+        except Exception as e:
+            print(f"Error inesperado: {str(e)}")
+    
+    def mostrar_menu(self):
+        print("\n=====================================")
+        print("\nSistema de Optimización de Rutas Logísticas\n")
+        print("1. Ruta más corta entre dos ciudades")
+        print("2. Centro del grafo")
+        print("3. Modificar grafo")
+        print("4. Salir")
+        print("\nElija una opción: ", end="")
+    
+    def leer_opcion(self) -> int:
+        try:
+            return int(input().strip())
+        except ValueError:
+            return -1
+    
+    def ruta_mas_corta(self):
+        ciudades = self.grafo.obtener_ciudades()
+        print("\nCiudades disponibles:")
+        for idx, ciudad in enumerate(ciudades):
+            print(f"{idx}: {ciudad}")
+        
+        try:
+            origen_idx = int(input("\nIngrese el índice de la ciudad origen: "))
+            destino_idx = int(input("Ingrese el índice de la ciudad destino: "))
+            
+            if origen_idx < 0 or origen_idx >= len(ciudades) or destino_idx < 0 or destino_idx >= len(ciudades):
+                print("\nÍndice de ciudad no válido.")
+                return
+            
+            self.floyd.calcular(self.grafo.obtener_matriz())
+            ruta_indices = self.floyd.obtener_ruta_indices(origen_idx, destino_idx)
+            
+            if not ruta_indices:
+                print(f"\nNo hay ruta entre {ciudades[origen_idx]} y {ciudades[destino_idx]}")
+                return
+            
+            distancia = self.floyd.obtener_distancia(origen_idx, destino_idx)
+            ruta_ciudades = [ciudades[i] for i in ruta_indices]
+            
+            print("\nRuta más corta:", " -> ".join(ruta_ciudades))
+            print(f"Distancia total: {distancia} horas")
+        
+        except ValueError:
+            print("\nEntrada no válida. Debe ingresar un número.")
 
+class main:
+    def __init__(self):
+        self.grafo = None
+        self.floyd = AlgoritmoFloyd()
+        self.archivo_datos = "logistica.txt"
+    
+    def ejecutar(self):
+        try:
+            rutas = AnalizadorArchivo.analizar(self.archivo_datos)
+            self.grafo = Grafo(rutas)
+            self.floyd.calcular(self.grafo.obtener_matriz())
+            
+            salir = False
+            while not salir:
+                self.mostrar_menu()
+                opcion = self.leer_opcion()
+                
+                if opcion == 1:
+                    self.ruta_mas_corta()
+                elif opcion == 2:
+                    self.centro_grafo()
+                elif opcion == 3:
+                    self.modificar_grafo()
+                elif opcion == 4:
+                    print("\n¡Gracias por usar el programa de optimización de rutas!")
+                    salir = True
+                else:
+                    print("\nOpción no válida. Intente nuevamente.")
+        
+        except FileNotFoundError:
+            print(f"Error: No se encontró el archivo {self.archivo_datos}")
+        except Exception as e:
+            print(f"Error inesperado: {str(e)}")
+    
+    def mostrar_menu(self):
+        print("\n=====================================")
+        print("\nSistema de Optimización de Rutas Logísticas\n")
+        print("1. Ruta más corta entre dos ciudades")
+        print("2. Centro del grafo")
+        print("3. Modificar grafo")
+        print("4. Salir")
+        print("\nElija una opción: ", end="")
+    
+    def leer_opcion(self) -> int:
+        try:
+            return int(input().strip())
+        except ValueError:
+            return -1
+    
+    def ruta_mas_corta(self):
+        ciudades = self.grafo.obtener_ciudades()
+        print("\nCiudades disponibles:")
+        for idx, ciudad in enumerate(ciudades):
+            print(f"{idx}: {ciudad}")
+        
+        try:
+            origen_idx = int(input("\nIngrese el índice de la ciudad origen: "))
+            destino_idx = int(input("Ingrese el índice de la ciudad destino: "))
+            
+            if origen_idx < 0 or origen_idx >= len(ciudades) or destino_idx < 0 or destino_idx >= len(ciudades):
+                print("\nÍndice de ciudad no válido.")
+                return
+            
+            self.floyd.calcular(self.grafo.obtener_matriz())
+            ruta_indices = self.floyd.obtener_ruta_indices(origen_idx, destino_idx)
+            
+            if not ruta_indices:
+                print(f"\nNo hay ruta entre {ciudades[origen_idx]} y {ciudades[destino_idx]}")
+                return
+            
+            distancia = self.floyd.obtener_distancia(origen_idx, destino_idx)
+            ruta_ciudades = [ciudades[i] for i in ruta_indices]
+            
+            print("\nRuta más corta:", " -> ".join(ruta_ciudades))
+            print(f"Distancia total: {distancia} horas")
+        
+        except ValueError:
+            print("\nEntrada no válida. Debe ingresar un número.")
