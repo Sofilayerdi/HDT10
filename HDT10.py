@@ -107,5 +107,32 @@ class AlgortimoFloyd:
             actual = self.siguiente[actual][destino]
         ruta.append(destino)
         return ruta
+    
+class AnalizadorArchivo:
+    @staticmethod
+    def analizar(nombre_archivo: str) -> List[Ruta]:
+        rutas = []
+        with open(nombre_archivo, 'r') as archivo:
+            for linea in archivo:
+                linea = linea.strip()
+                if not linea:
+                    continue
+                
+                partes = linea.split()
+                if len(partes) != 6:
+                    raise ValueError(f"Línea mal formada: {linea}")
+                
+                ciudad1 = partes[0]
+                ciudad2 = partes[1]
+                tiempo_normal = int(partes[2])
+                tiempo_lluvia = int(partes[3])
+                tiempo_nieve = int(partes[4])
+                tiempo_tormenta = int(partes[5])
+                
+                nombre = f"{ciudad1}To{ciudad2}"
+                rutas.append(Ruta(nombre, ciudad1, ciudad2, 
+                                tiempo_normal, tiempo_lluvia, 
+                                tiempo_nieve, tiempo_tormenta))
+        return rutas
 
 
