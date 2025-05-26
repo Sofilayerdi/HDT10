@@ -66,4 +66,46 @@ class Grafo:
         i = self.indice_ciudad[ciudad1]
         j = self.indice_ciudad[ciudad2]
         return self.matriz[i][j]
+class AlgortimoFloyd:
+    def __init__(self):
+        self.distancias = []
+        self.siguiente = []
+        self.infinito = sys.maxsize 
+    
+    def calcular(self, matriz: List[List[int]]):
+        n = len(matriz)
+        self.distancias = [fila.copy() for fila in matriz]
+        self.siguiente = [[0] * n for _ in range(n)]
+        
+        # Inicializar matriz siguiente
+        for i in range(n):
+            for j in range(n):
+                if i != j and matriz[i][j] < self.infinito:
+                    self.siguiente[i][j] = j
+                else:
+                    self.siguiente[i][j] = -1
+        
+        # Algoritmo de Floyd-Warshall
+        for k in range(n):
+            for i in range(n):
+                for j in range(n):
+                    if self.distancias[i][k] + self.distancias[k][j] < self.distancias[i][j]:
+                        self.distancias[i][j] = self.distancias[i][k] + self.distancias[k][j]
+                        self.siguiente[i][j] = self.siguiente[i][k]
+    
+    def obtener_distancia(self, i: int, j: int) -> int:
+        return self.distancias[i][j]
+    
+    def obtener_ruta_indices(self, origen: int, destino: int) -> List[int]:
+        if self.siguiente[origen][destino] == -1:
+            return []
+        
+        ruta = []
+        actual = origen
+        while actual != destino:
+            ruta.append(actual)
+            actual = self.siguiente[actual][destino]
+        ruta.append(destino)
+        return ruta
+
 
